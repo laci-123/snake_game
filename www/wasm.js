@@ -20,8 +20,9 @@ function js_fill_rect(x, y, width, height, color) {
 let prev_timestamp = null;
 function next_frame(timestamp) {
     if (prev_timestamp !== null) {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         const dt = (timestamp - prev_timestamp) * 0.001;
-        // wasm.instance.exports.update(dt);
+        wasm.instance.exports.update(dt);
         wasm.instance.exports.render();
     }
     prev_timestamp = timestamp;
