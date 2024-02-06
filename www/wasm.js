@@ -29,6 +29,21 @@ function next_frame(timestamp) {
     window.requestAnimationFrame(next_frame);
 }
 
+main_canvas.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") {
+        wasm.instance.exports.input(0);
+    }
+    else if (e.key === "ArrowUp") {
+        wasm.instance.exports.input(1);
+    }
+    else if (e.key === "ArrowLeft") {
+        wasm.instance.exports.input(2);
+    }
+    else if (e.key === "ArrowDown") {
+        wasm.instance.exports.input(3);
+    }
+});
+
 
 WebAssembly.instantiateStreaming(fetch('browser_snake.wasm'), {
     env: {

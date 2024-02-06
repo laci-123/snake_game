@@ -13,6 +13,13 @@ fn fill_rect(x: f32, y: f32, width: f32, height: f32, color: Color) {
     }
 }
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Input {
+    ArrowRight,
+    ArrowUp,
+    ArrowLeft,
+    ArrowDown,
+}
 
 static GAME: Mutex<Game> = Mutex::new(Game::new());
 
@@ -24,6 +31,17 @@ pub extern "C" fn update(dt: f32) {
 #[no_mangle]
 pub extern "C" fn render() {
     GAME.lock().unwrap().render();
+}
+
+#[no_mangle]
+pub extern "C" fn input(x: i32) {
+    match x {
+        0 => GAME.lock().unwrap().input(Input::ArrowRight),
+        1 => GAME.lock().unwrap().input(Input::ArrowUp),
+        2 => GAME.lock().unwrap().input(Input::ArrowLeft),
+        3 => GAME.lock().unwrap().input(Input::ArrowDown),
+        _ => unreachable!(),
+    }
 }
 
 
