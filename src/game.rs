@@ -13,11 +13,11 @@ impl Game {
     }
     
     pub fn update(&mut self, dt: f32) {
-        self.x += dt * 20.0;
-        self.y += dt * 10.0;
+        self.x += dt * 10.0;
+        self.y += dt * 20.0;
     }
 
     pub fn render(&mut self) {
-        fill_rect(self.x, self.y, 100, 50, Color::rgb(0, 0, 255));
+        fill_rect(self.x, self.y, 100, 50, Color::rgb(0, 255, 255));
     }
 }
