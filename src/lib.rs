@@ -4,10 +4,10 @@ use std::sync::Mutex;
 
 
 extern "C" {
-    fn js_fill_rect(x: f32, y: f32, width: i32, height: i32, color: u32);
+    fn js_fill_rect(x: f32, y: f32, width: f32, height: f32, color: u32);
 }
 
-fn fill_rect(x: f32, y: f32, width: i32, height: i32, color: Color) {
+fn fill_rect(x: f32, y: f32, width: f32, height: f32, color: Color) {
     unsafe {
         js_fill_rect(x, y, width, height, color.to_u32());
     }
