@@ -1,5 +1,6 @@
 use color::Color;
 use game::*;
+use lazy_static::lazy_static;
 use std::sync::Mutex;
 
 
@@ -21,7 +22,9 @@ enum Input {
     ArrowDown,
 }
 
-static GAME: Mutex<Game> = Mutex::new(Game::new());
+lazy_static! {
+    static ref GAME: Mutex<Game> = Mutex::new(Game::new());
+}
 
 #[no_mangle]
 pub extern "C" fn update(dt: f32) {
