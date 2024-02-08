@@ -4,6 +4,12 @@ use lazy_static::lazy_static;
 use std::sync::Mutex;
 
 
+const CANVAS_WIDTH:  usize = 800;
+const CANVAS_HEIGHT: usize = 450;
+const MIDDLE_X: f32 = (CANVAS_WIDTH / 2) as f32;
+const MIDDLE_Y: f32 = (CANVAS_HEIGHT / 2) as f32;
+
+
 extern "C" {
     fn js_fill_circle(x: f32, y: f32, r: f32, color: u32);
     fn js_fill_text(text_ptr: i32, text_len: i32, x: f32, y: f32, color: u32, font_size: i32);
