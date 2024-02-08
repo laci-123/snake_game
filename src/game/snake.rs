@@ -18,7 +18,7 @@ impl Snake {
     pub fn new(position: Vector2D<f32>, size: f32, color: Color) -> Self {
         let mut cells = Vec::new();
         let cell_distance = size / 2.0;
-        for i in 0..5 {
+        for i in 0..10 {
             let cell = SnakeCell { position: position - Vector2D::new((i as f32) * cell_distance, 0.0), size, color, velocity: Vector2D::new(10.0, 0.0) };
             cells.push(cell);
         }
@@ -50,11 +50,13 @@ impl Snake {
     pub fn update(&mut self, dt: f32, food: &mut Food) -> GameStatus {
         let cell_distance = self.cell_distance;
         let head = self.get_head();
-        let tail = self.get_tail();
 
         if food.status == FoodStatus::StillThere && (food.position - head.position).length() <= food.size + head.size {
-            let cell = SnakeCell { position: tail.position - Vector2D::new(cell_distance, 0.0), size: tail.size, color: tail.color, velocity: tail.velocity };
-            self.cells.push(cell);
+            for _ in 0..5 {
+                let tail = self.get_tail();
+                let cell = SnakeCell { position: tail.position - Vector2D::new(cell_distance, 0.0), size: tail.size, color: tail.color, velocity: tail.velocity };
+                self.cells.push(cell);
+            }
             self.color_cells();
             food.status = FoodStatus::Eaten;
         }

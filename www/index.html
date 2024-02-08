@@ -3,20 +3,32 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="icon" href="data:,">
-        <title>Snake</title>
+        <title>Snake Game</title>
         <style>
-         body {
-             background-color: #181920;
+         html {
+             height: 100%;
+             background: linear-gradient(#000070, #000020);
              color: white;
          }
          #main-canvas {
-             border: 1px solid red;
+             background-color: #181920;
+             border: 1px solid #aa0090;
              outline: none;
          }
         </style>
     </head>
     <body>
-        <h1>Snake</h1>
+        <h1>Snake Game</h1>
+
+        <p>
+            Help the snake eat all the yellow orbs! It grows a little bit every time it eats one.
+        </p>
+        <p>
+            If the snake collides with itself, it dies :(
+        </p>
+            Move the snake with the arrow keys, press space to pause/unpause.
+        </p>
+
         <canvas id="main-canvas" width="800" height="450" tabindex="0"></canvas>
         <script src="wasm.js"></script>
     </body>
