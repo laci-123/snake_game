@@ -32,6 +32,10 @@ function js_fill_text(text_ptr, text_len, x, y, color, font_size) {
     ctx.fillText(text, x, y);
 }
 
+function js_random_between(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
 let prev_timestamp = null;
 function next_frame(timestamp) {
     if (prev_timestamp !== null) {
@@ -66,7 +70,8 @@ main_canvas.addEventListener("keydown", (e) => {
 WebAssembly.instantiateStreaming(fetch('browser_snake.wasm'), {
     env: {
         js_fill_circle,
-        js_fill_text
+        js_fill_text,
+        js_random_between
     }
 }).then((w) => {
     wasm = w;
