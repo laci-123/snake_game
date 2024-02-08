@@ -20,18 +20,28 @@ impl Color {
 
     pub fn darken(&self, f: f32) -> Self {
         if f < 0.0 {
-            Self { r: 0, g: 0, b: 0, a: 255 }
+            Self {
+                r: 0,
+                g: 0,
+                b: 0,
+                a: self.a,
+            }
         }
         else if f <= 1.0 {
             Self {
                 r: ((self.r as f32) * f) as u8,
                 g: ((self.g as f32) * f) as u8,
                 b: ((self.b as f32) * f) as u8,
-                a: 255
+                a: self.a,
             }
         }
         else {
-            Self { r: 255, g: 255, b: 255, a: 255 }
+            Self {
+                r: 255,
+                g: 255,
+                b: 255,
+                a: self.a,
+            }
         }
     }
 }

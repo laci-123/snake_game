@@ -64,7 +64,7 @@ main_canvas.addEventListener("keydown", (e) => {
     else if (e.key === " ") {
         wasm.instance.exports.input(4);
     }
-    else if (e.key === "R") {
+    else if (e.key === "r") {
         wasm.instance.exports.input(5);
     }
 });

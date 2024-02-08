@@ -22,25 +22,40 @@ impl Snake {
             let cell = SnakeCell { position: position - Vector2D::new((i as f32) * cell_distance, 0.0), size, color, velocity: Vector2D::new(10.0, 0.0) };
             cells.push(cell);
         }
-        Self { cells, cell_distance }
+        let mut this = Self { cells, cell_distance };
+        this.color_cells();
+        this
+    }
+
+    fn get_head(&self) -> &SnakeCell {
+        self.cells.first().unwrap() // Self is constructed with one cell and we never remove cells ==> there is always at least one cell
     }
 
     fn get_head_mut(&mut self) -> &mut SnakeCell {
-        if let Some(head) = self.cells.get_mut(0) {
-            head
-        }
-        else {
-            unreachable!() // Self is constructed with one cell and we never remove cells ==> there is always at least one cell
+        self.cells.first_mut().unwrap() // Self is constructed with one cell and we never remove cells ==> there is always at least one cell
+    }
+
+    fn get_tail(&self) -> &SnakeCell {
+        self.cells.last().unwrap() // Self is constructed with one cell and we never remove cells ==> there is always at least one cell
+    }
+
+    fn color_cells(&mut self) {
+        let total = self.cells.len();
+        let hc = self.get_head().color;
+        for (i, cell) in self.cells.iter_mut().enumerate() {
+            cell.color = hc.darken((total - i) as f32 / total as f32);
         }
     }
 
     pub fn update(&mut self, dt: f32, food: &mut Food) -> GameStatus {
         let cell_distance = self.cell_distance;
-        let head = self.get_head_mut();
+        let head = self.get_head();
+        let tail = self.get_tail();
 
         if food.status == FoodStatus::StillThere && (food.position - head.position).length() <= food.size + head.size {
-            let cell = SnakeCell { position: head.position - Vector2D::new(cell_distance, 0.0), size: head.size, color: head.color, velocity: Vector2D::new(10.0, 0.0) };
+            let cell = SnakeCell { position: tail.position - Vector2D::new(cell_distance, 0.0), size: tail.size, color: tail.color, velocity: tail.velocity };
             self.cells.push(cell);
+            self.color_cells();
             food.status = FoodStatus::Eaten;
         }
 
@@ -70,6 +85,15 @@ impl Snake {
             self.cells[i + 1].position += dp;
         }
 
+        let hp = self.get_head().position;
+        for cell in &mut self.cells[5..] {
+            if (cell.position - hp).length() < cell.size {
+                cell.color = Color::rgb(255, 0, 0);
+                self.cells[0].color = Color::rgb(255, 0, 0);
+                return GameStatus::Over;
+            }
+        }
+
         GameStatus::Playing
     }
 
@@ -88,9 +112,8 @@ impl Snake {
     }
 
     pub fn render(&self) {
-        let total = self.cells.len();
-        for (i, cell) in self.cells.iter().enumerate() {
-            fill_circle(cell.position.x, cell.position.y, cell.size, cell.color.darken((total - i) as f32 / total as f32));
+        for cell in self.cells.iter() {
+            fill_circle(cell.position.x, cell.position.y, cell.size, cell.color);
         }
     }
 }
