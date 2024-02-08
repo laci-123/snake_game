@@ -34,26 +34,28 @@ impl Snake {
         }
     }
 
-    pub fn update(&mut self, dt: f32, food: &mut Option<Food>) -> GameStatus {
+    pub fn update(&mut self, dt: f32, food: &mut Food) -> GameStatus {
         let cell_distance = self.cell_distance;
         let head = self.get_head_mut();
 
-        if let Some(f) = food {
-            if !f.eaten && (f.position - head.position).length() <= f.size + head.size {
-                let cell = SnakeCell { position: head.position - Vector2D::new(cell_distance, 0.0), size: head.size, color: head.color, velocity: Vector2D::new(10.0, 0.0) };
-                self.cells.push(cell);
-                f.eaten = true;
-            }
+        if food.status == FoodStatus::StillThere && (food.position - head.position).length() <= food.size + head.size {
+            let cell = SnakeCell { position: head.position - Vector2D::new(cell_distance, 0.0), size: head.size, color: head.color, velocity: Vector2D::new(10.0, 0.0) };
+            self.cells.push(cell);
+            food.status = FoodStatus::Eaten;
         }
 
         let head = self.get_head_mut();
         let p = head.position + head.velocity * dt;
         let r = head.size;
-        if p.x - r < 0.0 || (CANVAS_WIDTH as f32) < p.x + r || p.y - r < 0.0 || (CANVAS_HEIGHT as f32) < p.y + r {
-            return GameStatus::Over;
+        if p.x - r < 0.0 || (CANVAS_WIDTH as f32) < p.x + r { 
+            head.velocity.x *= -0.9;
         }
-
-        head.position = p;
+        else if p.y - r < 0.0 || (CANVAS_HEIGHT as f32) < p.y + r {
+            head.velocity.y *= -0.9;
+        }
+        else {
+            head.position = p;
+        }
 
         for i in 0 .. (self.cells.len() - 1) { // self.cells.len() is always at least 1
             let c0 = &self.cells[i];

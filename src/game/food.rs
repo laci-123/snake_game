@@ -1,12 +1,19 @@
 use super::*;
 
 
+#[derive(PartialEq, Eq)]
+pub enum FoodStatus {
+    StillThere,
+    Eaten,
+    Gone,
+}
+
+
 pub struct Food {
     pub position: Vector2D<f32>,
     pub size: f32,
     pub color: Color,
-    pub eaten: bool,
-    pub gone: bool,
+    pub status: FoodStatus,
 }
 
 impl Food {
@@ -16,17 +23,16 @@ impl Food {
             position: Vector2D::new(random_between(size, CANVAS_WIDTH as f32 - size), random_between(size, CANVAS_HEIGHT as f32 - size)),
             size,
             color,
-            eaten: false,
-            gone: false,
+            status: FoodStatus::StillThere,
         }
     }
 
     pub fn update(&mut self, dt: f32) {
-        if self.eaten && !self.gone {
+        if self.status == FoodStatus::Eaten {
             self.size -= 10.0 * dt;
-        }
-        if self.size < 1.0 {
-            self.gone = true;
+            if self.size < 1.0 {
+                self.status = FoodStatus::Gone;
+            }
         }
     }
 
