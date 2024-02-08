@@ -31,30 +31,29 @@ impl Snake {
     }
 
     fn update(&mut self, dt: f32) -> GameStatus {
-        if let Some(first_cell) = self.cells.get_mut(0) {
-            let p = first_cell.position + first_cell.velocity * dt;
-            let r = first_cell.size / 2.0;
-            if p.x - r < 0.0 || (CANVAS_WIDTH as f32) < p.x + r || p.y - r < 0.0 || (CANVAS_HEIGHT as f32) < p.y + r {
-                return GameStatus::Over;
-            }
-
-            first_cell.position = p;
-
-            for i in 0 .. (self.cells.len() - 1) { // self.cells.len() is always at least 1
-                let c0 = &self.cells[i];
-                let c1 = &self.cells[i + 1];
-
-                let dx = (c0.position - c1.position).length();
-                let alpha = (dx - self.cell_distance) * 10.0;
-                let direction = (c0.position - c1.position).normalise();
-
-                self.cells[i + 1].velocity = direction * alpha;
-                let dp = self.cells[i + 1].velocity * dt;
-                self.cells[i + 1].position += dp;
-            }
-        }
-        else {
+        let Some(first_cell) = self.cells.get_mut(0) else {
             unreachable!(); // Self is constructed with one cell and we never remove cells ==> there is always at least one cell
+        };
+
+        let p = first_cell.position + first_cell.velocity * dt;
+        let r = first_cell.size;
+        if p.x - r < 0.0 || (CANVAS_WIDTH as f32) < p.x + r || p.y - r < 0.0 || (CANVAS_HEIGHT as f32) < p.y + r {
+            return GameStatus::Over;
+        }
+
+        first_cell.position = p;
+
+        for i in 0 .. (self.cells.len() - 1) { // self.cells.len() is always at least 1
+            let c0 = &self.cells[i];
+            let c1 = &self.cells[i + 1];
+
+            let dx2 = (c0.position - c1.position).length_squared();
+            let alpha = (dx2 - self.cell_distance * self.cell_distance) * 1.0;
+            let direction = (c0.position - c1.position).normalise();
+
+            self.cells[i + 1].velocity = direction * alpha;
+            let dp = self.cells[i + 1].velocity * dt;
+            self.cells[i + 1].position += dp;
         }
 
         GameStatus::Playing
@@ -75,9 +74,12 @@ pub struct Game {
 
 impl Game {
     pub fn new() -> Self {
+        let cell_size     = 10.0;
+        let cell_distance = 5.0;
+        let head_position = Vector2D::new((CANVAS_WIDTH / 2) as f32, (CANVAS_HEIGHT / 2) as f32);
         Self {
             status: GameStatus::Playing,
-            snake: Snake::new(Vector2D::new((CANVAS_WIDTH / 2) as f32, (CANVAS_HEIGHT / 2) as f32), 50.0, Color::rgb(0, 255, 255), 10.0)
+            snake: Snake::new(head_position, cell_size, Color::rgb(0, 255, 255), cell_distance)
         }
     }
     
@@ -89,7 +91,7 @@ impl Game {
                 }
             },
             GameStatus::Over => {
-                // todo
+                fill_text("Game Over", (CANVAS_WIDTH / 2) as f32, (CANVAS_HEIGHT / 2) as f32, Color::rgb(255, 0, 0), 30);
             },
         }
     }
@@ -109,7 +111,7 @@ impl Game {
 
     pub fn render(&mut self) {
         for cell in self.snake.cells.iter() {
-            fill_rect(cell.position.x - cell.size / 2.0, cell.position.y - cell.size / 2.0, cell.size, cell.size, cell.color);
+            fill_circle(cell.position.x, cell.position.y, cell.size, cell.color);
         }
     }
 }

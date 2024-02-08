@@ -5,12 +5,21 @@ use std::sync::Mutex;
 
 
 extern "C" {
-    fn js_fill_rect(x: f32, y: f32, width: f32, height: f32, color: u32);
+    fn js_fill_circle(x: f32, y: f32, r: f32, color: u32);
+    fn js_fill_text(text_ptr: i32, text_len: i32, x: f32, y: f32, color: u32, font_size: i32);
 }
 
-fn fill_rect(x: f32, y: f32, width: f32, height: f32, color: Color) {
+fn fill_circle(x: f32, y: f32, width: f32, color: Color) {
     unsafe {
-        js_fill_rect(x, y, width, height, color.to_u32());
+        js_fill_circle(x, y, width, color.to_u32());
+    }
+}
+
+fn fill_text(text: &str, x: f32, y: f32, color: Color, font_size: i32) {
+    let text_ptr = (text.as_ptr() as usize) as i32;
+    let text_len = text.len() as i32;
+    unsafe {
+        js_fill_text(text_ptr, text_len, x, y, color.to_u32(), font_size);
     }
 }
 
