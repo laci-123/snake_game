@@ -43,6 +43,7 @@ enum Input {
     ArrowLeft,
     ArrowDown,
     Space,
+    R,
 }
 
 lazy_static! {
@@ -67,6 +68,7 @@ pub extern "C" fn input(x: i32) {
         2 => GAME.lock().unwrap().input(Input::ArrowLeft),
         3 => GAME.lock().unwrap().input(Input::ArrowDown),
         4 => GAME.lock().unwrap().input(Input::Space),
+        5 => GAME.lock().unwrap().input(Input::R),
         _ => unreachable!(),
     }
 }

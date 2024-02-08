@@ -88,8 +88,9 @@ impl Snake {
     }
 
     pub fn render(&self) {
-        for cell in self.cells.iter() {
-            fill_circle(cell.position.x, cell.position.y, cell.size, cell.color);
+        let total = self.cells.len();
+        for (i, cell) in self.cells.iter().enumerate() {
+            fill_circle(cell.position.x, cell.position.y, cell.size, cell.color.darken((total - i) as f32 / total as f32));
         }
     }
 }

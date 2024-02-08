@@ -8,6 +8,7 @@ use super::*;
 #[derive(PartialEq, Eq)]
 enum GameStatus {
     Playing,
+    Paused,
     Over,
 }
 
@@ -38,9 +39,13 @@ impl Game {
                     self.status = GameStatus::Over;
                 }
             },
+            GameStatus::Paused => {
+                fill_text("Paused", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40);
+                fill_text("press space to unpause", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15);
+            },
             GameStatus::Over => {
                 fill_text("Game Over", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40);
-                fill_text("press space to restart", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15);
+                fill_text("press R to restart", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15);
             },
         }
     }
@@ -48,6 +53,14 @@ impl Game {
     pub fn input(&mut self, input: Input) {
         match input {
             Input::Space => {
+                if self.status == GameStatus::Playing {
+                    self.status = GameStatus::Paused;
+                }
+                else if self.status == GameStatus::Paused {
+                    self.status = GameStatus::Playing;
+                }
+            },
+            Input::R => {
                 if self.status == GameStatus::Over {
                     // restart everything
                     *self = Self::new();
