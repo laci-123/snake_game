@@ -26,7 +26,7 @@ function js_fill_circle(x, y, r, color) {
 
 function js_fill_text(text_ptr, text_len, x, y, color, font_size) {
     ctx.fillStyle = color_to_hex_string(color); 
-    ctx.font = font_size + "px Times New Roman";
+    ctx.font = font_size + "px Luminary";
     ctx.textAlign = "center";
     const text = string_from_ptr(wasm.instance.exports.memory.buffer, text_ptr, text_len);
     ctx.fillText(text, x, y);
@@ -56,6 +56,9 @@ main_canvas.addEventListener("keydown", (e) => {
     }
     else if (e.key === "ArrowDown") {
         wasm.instance.exports.input(3);
+    }
+    else if (e.key === " ") {
+        wasm.instance.exports.input(4);
     }
 });
 

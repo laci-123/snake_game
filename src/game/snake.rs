@@ -63,6 +63,7 @@ impl Snake {
                 ArrowUp    => first_cell.velocity.y -= 10.0,
                 ArrowLeft  => first_cell.velocity.x -= 10.0,
                 ArrowDown  => first_cell.velocity.y += 10.0,
+                _          => {/* do nothing */},
             }
         }
     }

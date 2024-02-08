@@ -4,6 +4,7 @@ use snake::Snake;
 use super::*;
 
 
+#[derive(PartialEq, Eq)]
 enum GameStatus {
     Playing,
     Over,
@@ -31,13 +32,22 @@ impl Game {
                 }
             },
             GameStatus::Over => {
-                fill_text("Game Over", (CANVAS_WIDTH / 2) as f32, (CANVAS_HEIGHT / 2) as f32, Color::rgb(255, 0, 0), 30);
+                fill_text("Game Over", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40);
+                fill_text("press space to restart", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15);
             },
         }
     }
 
     pub fn input(&mut self, input: Input) {
-        self.snake.input(input);
+        match input {
+            Input::Space => {
+                if self.status == GameStatus::Over {
+                    // restart everything
+                    *self = Self::new();
+                }
+            },
+            _ => self.snake.input(input),
+        }
     }
 
     pub fn render(&mut self) {
