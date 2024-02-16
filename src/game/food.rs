@@ -28,11 +28,20 @@ impl Food {
     }
 
     pub fn update(&mut self, dt: f32) {
-        if self.status == FoodStatus::Eaten {
-            self.size -= 10.0 * dt;
-            if self.size < 1.0 {
-                self.status = FoodStatus::Gone;
-            }
+        match self.status {
+            FoodStatus::StillThere => {
+                self.size -= 2.0 * dt;
+                if self.size < 1.0 {
+                    self.status = FoodStatus::Gone;
+                }
+            },
+            FoodStatus::Eaten => {
+                self.size -= 10.0 * dt;
+                if self.size < 1.0 {
+                    self.status = FoodStatus::Gone;
+                }
+            },
+            FoodStatus::Gone => {},
         }
     }
 
