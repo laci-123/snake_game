@@ -47,7 +47,7 @@ impl Snake {
         }
     }
 
-    pub fn update(&mut self, dt: f32, food: &mut Food) -> GameStatus {
+    pub fn update(&mut self, dt: f32, food: &mut Food) -> Result<(), Vector2D<f32>> {
         let cell_distance = self.cell_distance;
         let head = self.get_head();
 
@@ -92,11 +92,11 @@ impl Snake {
             if (cell.position - hp).length() < cell.size {
                 cell.color = Color::rgb(255, 0, 0);
                 self.cells[0].color = Color::rgb(255, 0, 0);
-                return GameStatus::Over;
+                return Err(hp);
             }
         }
 
-        GameStatus::Playing
+        Ok(())
     }
 
     pub fn input(&mut self, input: Input) {

@@ -9,6 +9,7 @@ use super::*;
 enum GameStatus {
     Playing,
     Paused,
+    Dying,
     Over,
 }
 
@@ -39,6 +40,8 @@ pub struct Game {
     food: Food,
     texts: Vec<Text>,
     score: i32,
+    collision_pos: Vector2D<f32>,
+    collision_size: f32,
 }
 
 impl Game {
@@ -49,6 +52,8 @@ impl Game {
             food: Food::random(Color::rgb(255, 255, 0)),
             texts: Vec::new(),
             score: 0,
+            collision_pos: Vector2D::new(0.0, 0.0),
+            collision_size: 1.0,
         }
     }
     
@@ -56,6 +61,7 @@ impl Game {
         match self.status {
             GameStatus::Playing => {
                 self.food.update(dt);
+
                 match self.food.status {
                     FoodStatus::JustEaten => {
                         self.score += self.food.value;
@@ -74,13 +80,29 @@ impl Game {
                     },
                     _ => {},
                 }
-                if let GameStatus::Over = self.snake.update(dt, &mut self.food) {
-                    self.status = GameStatus::Over;
+
+                let s = self.snake.update(dt, &mut self.food); 
+
+                if let Err(collision_pos) = s {
+                    self.collision_pos = collision_pos;
+                    self.status = GameStatus::Dying;
                 }
             },
             GameStatus::Paused => {
                 self.show_text("Paused", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40, TextAlignment::Center);
                 self.show_text("press space to unpause", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15, TextAlignment::Center);
+            },
+            GameStatus::Dying => {
+                if self.collision_size < CANVAS_WIDTH as f32 {
+                    fill_circle(self.collision_pos.x,
+                                self.collision_pos.y,
+                                self.collision_size,
+                                Color { r: 255, g: 0, b: 0, a: (255.0 * (1.0 - self.collision_size / CANVAS_WIDTH as f32)) as u8 });
+                    self.collision_size += 500.0 * dt;
+                }
+                else {
+                    self.status = GameStatus::Over;
+                }
             },
             GameStatus::Over => {
                 self.show_text("Game Over", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40, TextAlignment::Center);
@@ -115,12 +137,11 @@ impl Game {
     }
 
     pub fn render(&mut self) {
-        self.snake.render();
         self.food.render();
+        self.snake.render();
         for t in self.texts.drain(..) {
             t.render();
         }
-        self.texts.clear();
     }
 
     fn show_text(&mut self, text: &str, x: f32, y: f32, color: Color, font_size: i32, alignment: TextAlignment) {
