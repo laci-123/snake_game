@@ -13,10 +13,30 @@ enum GameStatus {
 }
 
 
+struct Text {
+    text: String,
+    x: f32,
+    y: f32,
+    color: Color,
+    size: i32,
+}
+
+impl Text {
+    fn new(text: String, x: f32, y: f32, color: Color, size: i32) -> Self {
+        Self { text, x, y, color, size }
+    }
+
+    fn render(self) {
+        fill_text(&self.text, self.x, self.y, self.color, self.size)
+    }
+}
+
+
 pub struct Game {
     status: GameStatus,
     snake: Snake,
     food: Food,
+    texts: Vec<Text>,
 }
 
 impl Game {
@@ -25,6 +45,7 @@ impl Game {
             status: GameStatus::Playing,
             snake: Snake::new(Vector2D::new(MIDDLE_X, MIDDLE_Y), 10.0, Color::rgb(0, 255, 255)),
             food: Food::random(Color::rgb(255, 255, 0)),
+            texts: Vec::new(),
         }
     }
     
@@ -40,12 +61,12 @@ impl Game {
                 }
             },
             GameStatus::Paused => {
-                fill_text("Paused", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40);
-                fill_text("press space to unpause", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15);
+                self.show_text("Paused", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40);
+                self.show_text("press space to unpause", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15);
             },
             GameStatus::Over => {
-                fill_text("Game Over", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40);
-                fill_text("press R to restart", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15);
+                self.show_text("Game Over", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40);
+                self.show_text("press R to restart", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15);
             },
         }
     }
@@ -77,6 +98,14 @@ impl Game {
     pub fn render(&mut self) {
         self.snake.render();
         self.food.render();
+        for t in self.texts.drain(..) {
+            t.render();
+        }
+        self.texts.clear();
+    }
+
+    fn show_text(&mut self, text: &str, x: f32, y: f32, color: Color, font_size: i32) {
+        self.texts.push(Text::new(text.to_owned(), x, y, color, font_size))
     }
 }
 
