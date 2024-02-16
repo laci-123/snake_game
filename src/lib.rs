@@ -12,7 +12,7 @@ const MIDDLE_Y: f32 = (CANVAS_HEIGHT / 2) as f32;
 
 extern "C" {
     fn js_fill_circle(x: f32, y: f32, r: f32, color: u32);
-    fn js_fill_text(text_ptr: i32, text_len: i32, x: f32, y: f32, color: u32, font_size: i32);
+    fn js_fill_text(text_ptr: i32, text_len: i32, x: f32, y: f32, color: u32, font_size: i32, alignment: u8);
     fn js_random_between(min: f32, max: f32) -> f32;
 }
 
@@ -22,11 +22,11 @@ fn fill_circle(x: f32, y: f32, width: f32, color: Color) {
     }
 }
 
-fn fill_text(text: &str, x: f32, y: f32, color: Color, font_size: i32) {
+fn fill_text(text: &str, x: f32, y: f32, color: Color, font_size: i32, alignment: TextAlignment) {
     let text_ptr = (text.as_ptr() as usize) as i32;
     let text_len = text.len() as i32;
     unsafe {
-        js_fill_text(text_ptr, text_len, x, y, color.to_u32(), font_size);
+        js_fill_text(text_ptr, text_len, x, y, color.to_u32(), font_size, alignment as u8);
     }
 }
 
@@ -34,6 +34,14 @@ fn random_between(min: f32, max: f32) -> f32 {
     unsafe {
         js_random_between(min, max)
     }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
+enum TextAlignment {
+    Center = 0,
+    Left,
+    // Right,
 }
 
 #[derive(Clone, Copy, PartialEq, Eq)]

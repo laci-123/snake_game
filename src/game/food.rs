@@ -4,6 +4,7 @@ use super::*;
 #[derive(PartialEq, Eq)]
 pub enum FoodStatus {
     StillThere,
+    JustEaten,
     Eaten,
     Gone,
 }
@@ -12,8 +13,10 @@ pub enum FoodStatus {
 pub struct Food {
     pub position: Vector2D<f32>,
     pub size: f32,
+    pub original_size: f32,
     pub color: Color,
     pub status: FoodStatus,
+    pub value: i32,
 }
 
 impl Food {
@@ -22,21 +25,24 @@ impl Food {
         Self {
             position: Vector2D::new(random_between(size, CANVAS_WIDTH as f32 - size), random_between(size, CANVAS_HEIGHT as f32 - size)),
             size,
+            original_size: size,
             color,
             status: FoodStatus::StillThere,
+            value: ((35.0 - size) / 5.0) as i32,
         }
     }
 
     pub fn update(&mut self, dt: f32) {
         match self.status {
             FoodStatus::StillThere => {
-                self.size -= 2.0 * dt;
+                self.size -= 1.5 * dt;
                 if self.size < 1.0 {
                     self.status = FoodStatus::Gone;
                 }
             },
+            FoodStatus::JustEaten => {},
             FoodStatus::Eaten => {
-                self.size -= 10.0 * dt;
+                self.size -= 0.5 * self.original_size * dt;
                 if self.size < 1.0 {
                     self.status = FoodStatus::Gone;
                 }

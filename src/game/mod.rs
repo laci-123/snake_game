@@ -19,15 +19,16 @@ struct Text {
     y: f32,
     color: Color,
     size: i32,
+    alignment: TextAlignment,
 }
 
 impl Text {
-    fn new(text: String, x: f32, y: f32, color: Color, size: i32) -> Self {
-        Self { text, x, y, color, size }
+    fn new(text: String, x: f32, y: f32, color: Color, size: i32, alignment: TextAlignment) -> Self {
+        Self { text, x, y, color, size, alignment }
     }
 
     fn render(self) {
-        fill_text(&self.text, self.x, self.y, self.color, self.size)
+        fill_text(&self.text, self.x, self.y, self.color, self.size, self.alignment)
     }
 }
 
@@ -37,6 +38,7 @@ pub struct Game {
     snake: Snake,
     food: Food,
     texts: Vec<Text>,
+    score: i32,
 }
 
 impl Game {
@@ -46,6 +48,7 @@ impl Game {
             snake: Snake::new(Vector2D::new(MIDDLE_X, MIDDLE_Y), 10.0, Color::rgb(0, 255, 255)),
             food: Food::random(Color::rgb(255, 255, 0)),
             texts: Vec::new(),
+            score: 0,
         }
     }
     
@@ -53,22 +56,38 @@ impl Game {
         match self.status {
             GameStatus::Playing => {
                 self.food.update(dt);
-                if self.food.status == FoodStatus::Gone {
-                    self.food = Food::random(Color::rgb(255, 255, 0));
+                match self.food.status {
+                    FoodStatus::JustEaten => {
+                        self.score += self.food.value;
+                        self.food.status = FoodStatus::Eaten;
+                    },
+                    FoodStatus::Eaten => {
+                        self.show_text(&format!("+{}", self.food.value),
+                                       self.food.position.x,
+                                       self.food.position.y - 2.0 * self.food.original_size + 2.0 * self.food.size,
+                                       Color{ r: 255, g: 255, b: 0, a: (255.0 * (self.food.size / self.food.original_size)) as u8 },
+                                       20,
+                                       TextAlignment::Center);
+                    },
+                    FoodStatus::Gone => {
+                        self.food = Food::random(Color::rgb(255, 255, 0));
+                    },
+                    _ => {},
                 }
                 if let GameStatus::Over = self.snake.update(dt, &mut self.food) {
                     self.status = GameStatus::Over;
                 }
             },
             GameStatus::Paused => {
-                self.show_text("Paused", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40);
-                self.show_text("press space to unpause", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15);
+                self.show_text("Paused", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40, TextAlignment::Center);
+                self.show_text("press space to unpause", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15, TextAlignment::Center);
             },
             GameStatus::Over => {
-                self.show_text("Game Over", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40);
-                self.show_text("press R to restart", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15);
+                self.show_text("Game Over", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40, TextAlignment::Center);
+                self.show_text("press R to restart", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15, TextAlignment::Center);
             },
         }
+        self.show_text(&self.score.to_string(), 5.0, 20.0, Color::rgb(255, 255, 255), 20, TextAlignment::Left);
     }
 
     pub fn input(&mut self, input: Input) {
@@ -104,8 +123,8 @@ impl Game {
         self.texts.clear();
     }
 
-    fn show_text(&mut self, text: &str, x: f32, y: f32, color: Color, font_size: i32) {
-        self.texts.push(Text::new(text.to_owned(), x, y, color, font_size))
+    fn show_text(&mut self, text: &str, x: f32, y: f32, color: Color, font_size: i32, alignment: TextAlignment) {
+        self.texts.push(Text::new(text.to_owned(), x, y, color, font_size, alignment))
     }
 }
 

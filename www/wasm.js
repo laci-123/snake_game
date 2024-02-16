@@ -24,10 +24,18 @@ function js_fill_circle(x, y, r, color) {
     ctx.fill();
 }
 
-function js_fill_text(text_ptr, text_len, x, y, color, font_size) {
+function js_fill_text(text_ptr, text_len, x, y, color, font_size, alignment) {
     ctx.fillStyle = color_to_hex_string(color); 
     ctx.font = font_size + "px Luminary";
-    ctx.textAlign = "center";
+    if (alignment === 0) {
+        ctx.textAlign = "center";
+    }
+    else if (alignment === 1) {
+        ctx.textAlign = "left";
+    }
+    else {
+        ctx.textAlign = "right";
+    }
     const text = string_from_ptr(wasm.instance.exports.memory.buffer, text_ptr, text_len);
     ctx.fillText(text, x, y);
 }

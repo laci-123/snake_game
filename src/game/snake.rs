@@ -58,7 +58,7 @@ impl Snake {
                 self.cells.push(cell);
             }
             self.color_cells();
-            food.status = FoodStatus::Eaten;
+            food.status = FoodStatus::JustEaten;
         }
 
         let head = self.get_head_mut();
