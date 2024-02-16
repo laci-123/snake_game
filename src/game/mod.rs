@@ -66,7 +66,11 @@ impl Game {
                     *self = Self::new();
                 }
             },
-            _ => self.snake.input(input),
+            _ => {
+                if self.status == GameStatus::Playing {
+                    self.snake.input(input);
+                }
+            },
         }
     }
 
