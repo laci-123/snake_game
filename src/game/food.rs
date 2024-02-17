@@ -32,6 +32,18 @@ impl Food {
         }
     }
 
+
+    pub fn shift_into_canvas(&mut self, canvas_width: f32, canvas_height: f32) {
+        let x = self.position.x + self.size - canvas_width;
+        if x > 0.0 {
+            self.position.x -= x;
+        }
+        let y = self.position.y + self.size - canvas_height;
+        if y > 0.0 {
+            self.position.y -= y;
+        }
+    }
+
     pub fn update(&mut self, dt: f32) {
         match self.status {
             FoodStatus::StillThere => {

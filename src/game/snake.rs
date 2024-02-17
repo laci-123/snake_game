@@ -27,6 +27,28 @@ impl Snake {
         this
     }
 
+    pub fn shift_into_canvas(&mut self, canvas_width: f32, canvas_height: f32) {
+        let mut max_x = 0.0;
+        let mut max_y = 0.0;
+        for cell in self.cells.iter() {
+            let x = cell.position.x + cell.size - canvas_width;
+            if x > max_x {
+                max_x = x;
+            }
+            let y = cell.position.y + cell.size - canvas_height;
+            if y > max_y {
+                max_y = y;
+            }
+        }
+
+        let v = Vector2D::new(max_x, max_y);
+        if v.length_squared() > 0.0 {
+            for cell in self.cells.iter_mut() {
+                cell.position -= v;
+            }
+        }
+    }
+
     fn get_head(&self) -> &SnakeCell {
         self.cells.first().unwrap() // Self is constructed with one cell and we never remove cells ==> there is always at least one cell
     }

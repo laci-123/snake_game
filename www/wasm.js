@@ -85,8 +85,6 @@ function resize_canvas(e) {
 }
 
 window.addEventListener("resize", resize_canvas);
-window.addEventListener("load", resize_canvas);
-
 
 WebAssembly.instantiateStreaming(fetch('browser_snake.wasm'), {
     env: {
@@ -97,6 +95,6 @@ WebAssembly.instantiateStreaming(fetch('browser_snake.wasm'), {
 }).then((w) => {
     wasm = w;
     window.requestAnimationFrame(next_frame);
+    main_canvas.focus();
+    resize_canvas(null);
 });
-
-main_canvas.focus();

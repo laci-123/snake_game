@@ -52,8 +52,8 @@ impl Game {
             canvas_width: 100.0,
             canvas_height: 100.0,
             status: GameStatus::Playing,
-            snake: Snake::new(Vector2D::new(100.0, 100.0), 10.0, Color::rgb(0, 255, 255)),
-            food: Food::random(Color::rgb(255, 255, 0), 100.0, 100.0),
+            snake: Snake::new(Vector2D::new(random_between(10.0, 500.0), random_between(10.0, 500.0)), 10.0, Color::rgb(0, 255, 255)),
+            food: Food::random(Color::rgb(255, 255, 0), 1000.0, 1000.0),
             texts: Vec::new(),
             score: 0,
             collision_pos: Vector2D::new(0.0, 0.0),
@@ -61,9 +61,21 @@ impl Game {
         }
     }
 
+    fn reset(&mut self) {
+        self.status = GameStatus::Playing;
+        self.snake = Snake::new(Vector2D::new(random_between(10.0, self.canvas_width - 10.0), random_between(10.0, self.canvas_height - 10.0)), 10.0, Color::rgb(0, 255, 255));
+        self.food = Food::random(Color::rgb(255, 255, 0), self.canvas_width, self.canvas_height);
+        self.texts.clear();
+        self.score = 0;
+        self.collision_size = 1.0;
+    }
+
     pub fn resize(&mut self, width: f32, height: f32) {
         self.canvas_width = width;
         self.canvas_height = height;
+
+        self.snake.shift_into_canvas(width, height);
+        self.food.shift_into_canvas(width, height);
     }
 
     pub fn update(&mut self, dt: f32) {
@@ -133,8 +145,7 @@ impl Game {
             },
             Input::R => {
                 if self.status == GameStatus::Over {
-                    // restart everything
-                    *self = Self::new();
+                    self.reset();
                 }
             },
             _ => {
