@@ -35,6 +35,8 @@ impl Text {
 
 
 pub struct Game {
+    canvas_width: f32,
+    canvas_height: f32,
     status: GameStatus,
     snake: Snake,
     food: Food,
@@ -47,16 +49,23 @@ pub struct Game {
 impl Game {
     pub fn new() -> Self {
         Self {
+            canvas_width: 100.0,
+            canvas_height: 100.0,
             status: GameStatus::Playing,
-            snake: Snake::new(Vector2D::new(MIDDLE_X, MIDDLE_Y), 10.0, Color::rgb(0, 255, 255)),
-            food: Food::random(Color::rgb(255, 255, 0)),
+            snake: Snake::new(Vector2D::new(100.0, 100.0), 10.0, Color::rgb(0, 255, 255)),
+            food: Food::random(Color::rgb(255, 255, 0), 100.0, 100.0),
             texts: Vec::new(),
             score: 0,
             collision_pos: Vector2D::new(0.0, 0.0),
             collision_size: 1.0,
         }
     }
-    
+
+    pub fn resize(&mut self, width: f32, height: f32) {
+        self.canvas_width = width;
+        self.canvas_height = height;
+    }
+
     pub fn update(&mut self, dt: f32) {
         match self.status {
             GameStatus::Playing => {
@@ -76,12 +85,12 @@ impl Game {
                                        TextAlignment::Center);
                     },
                     FoodStatus::Gone => {
-                        self.food = Food::random(Color::rgb(255, 255, 0));
+                        self.food = Food::random(Color::rgb(255, 255, 0), self.canvas_width, self.canvas_height);
                     },
                     _ => {},
                 }
 
-                let s = self.snake.update(dt, &mut self.food); 
+                let s = self.snake.update(dt, &mut self.food, self.canvas_width, self.canvas_height); 
 
                 if let Err(collision_pos) = s {
                     self.collision_pos = collision_pos;
@@ -89,15 +98,15 @@ impl Game {
                 }
             },
             GameStatus::Paused => {
-                self.show_text("Paused", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40, TextAlignment::Center);
-                self.show_text("press space to unpause", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15, TextAlignment::Center);
+                self.show_text("Paused", self.canvas_width / 2.0, self.canvas_height / 2.0, Color::rgb(255, 0, 0), 40, TextAlignment::Center);
+                self.show_text("press space to unpause", self.canvas_width / 2.0, self.canvas_height / 2.0 + 20.0, Color::rgb(255, 0, 0), 15, TextAlignment::Center);
             },
             GameStatus::Dying => {
-                if self.collision_size < CANVAS_WIDTH as f32 {
+                if self.collision_size < self.canvas_width {
                     fill_circle(self.collision_pos.x,
                                 self.collision_pos.y,
                                 self.collision_size,
-                                Color { r: 255, g: 0, b: 0, a: (255.0 * (1.0 - self.collision_size / CANVAS_WIDTH as f32)) as u8 });
+                                Color { r: 255, g: 0, b: 0, a: (255.0 * (1.0 - self.collision_size / self.canvas_width)) as u8 });
                     self.collision_size += 500.0 * dt;
                 }
                 else {
@@ -105,8 +114,8 @@ impl Game {
                 }
             },
             GameStatus::Over => {
-                self.show_text("Game Over", MIDDLE_X, MIDDLE_Y, Color::rgb(255, 0, 0), 40, TextAlignment::Center);
-                self.show_text("press R to restart", MIDDLE_X, MIDDLE_Y + 20.0, Color::rgb(255, 0, 0), 15, TextAlignment::Center);
+                self.show_text("Game Over", self.canvas_width / 2.0, self.canvas_height / 2.0, Color::rgb(255, 0, 0), 40, TextAlignment::Center);
+                self.show_text("press R to restart", self.canvas_width / 2.0, self.canvas_height / 2.0 + 20.0, Color::rgb(255, 0, 0), 15, TextAlignment::Center);
             },
         }
         self.show_text(&self.score.to_string(), 5.0, 20.0, Color::rgb(255, 255, 255), 20, TextAlignment::Left);

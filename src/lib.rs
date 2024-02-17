@@ -4,12 +4,6 @@ use lazy_static::lazy_static;
 use std::sync::Mutex;
 
 
-const CANVAS_WIDTH:  usize = 800;
-const CANVAS_HEIGHT: usize = 450;
-const MIDDLE_X: f32 = (CANVAS_WIDTH / 2) as f32;
-const MIDDLE_Y: f32 = (CANVAS_HEIGHT / 2) as f32;
-
-
 extern "C" {
     fn js_fill_circle(x: f32, y: f32, r: f32, color: u32);
     fn js_fill_text(text_ptr: i32, text_len: i32, x: f32, y: f32, color: u32, font_size: i32, alignment: u8);
@@ -36,6 +30,7 @@ fn random_between(min: f32, max: f32) -> f32 {
     }
 }
 
+
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[repr(u8)]
 enum TextAlignment {
@@ -44,7 +39,7 @@ enum TextAlignment {
     // Right,
 }
 
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq)]
 enum Input {
     ArrowRight,
     ArrowUp,
@@ -61,6 +56,12 @@ lazy_static! {
 #[no_mangle]
 pub extern "C" fn update(dt: f32) {
     GAME.lock().unwrap().update(dt);
+}
+
+
+#[no_mangle]
+pub extern "C" fn resize_canvas(width: f32, height: f32) {
+    GAME.lock().unwrap().resize(width, height);
 }
 
 #[no_mangle]

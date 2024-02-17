@@ -2,34 +2,39 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1" />
         <link rel="icon" href="data:,">
         <title>Snake Game</title>
         <style>
-         html {
-             height: 100%;
+         html, body {
+             height: 100vh;
+             padding: 0;
+             margin: 0;
              background: linear-gradient(#000070, #000020);
              color: white;
+         }
+         #content {
+             width: 60%;
+             height: 90%;
+             margin-left: auto;
+             margin-right: auto;
+             display: flex;
+             flex-flow: column;
          }
          #main-canvas {
              background-color: #181920;
              border: 1px solid #aa0090;
              outline: none;
+             flex-grow: 1;
          }
         </style>
     </head>
     <body>
-        <h1>Snake Game</h1>
-
-        <p>
-            Help the snake eat all the yellow orbs! It grows a little bit every time it eats one.
-        </p>
-        <p>
-            If the snake collides with itself, it dies :(
-        </p>
-            Move the snake with the arrow keys, press space to pause/unpause.
-        </p>
-
-        <canvas id="main-canvas" width="800" height="450" tabindex="0"></canvas>
+        <div id="content">
+            <h1>Snake Game</h1>
+            <canvas id="main-canvas" tabindex="0"></canvas>
+        </div>
+        
         <script src="wasm.js"></script>
     </body>
 </html>

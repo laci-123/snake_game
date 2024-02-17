@@ -47,7 +47,7 @@ impl Snake {
         }
     }
 
-    pub fn update(&mut self, dt: f32, food: &mut Food) -> Result<(), Vector2D<f32>> {
+    pub fn update(&mut self, dt: f32, food: &mut Food, canvas_width: f32, canvas_height: f32) -> Result<(), Vector2D<f32>> {
         let cell_distance = self.cell_distance;
         let head = self.get_head();
 
@@ -64,10 +64,10 @@ impl Snake {
         let head = self.get_head_mut();
         let p = head.position + head.velocity * dt;
         let r = head.size;
-        if p.x - r < 0.0 || (CANVAS_WIDTH as f32) < p.x + r { 
+        if p.x - r < 0.0 || canvas_width < p.x + r { 
             head.velocity.x *= -0.9;
         }
-        else if p.y - r < 0.0 || (CANVAS_HEIGHT as f32) < p.y + r {
+        else if p.y - r < 0.0 || canvas_height < p.y + r {
             head.velocity.y *= -0.9;
         }
         else {

@@ -77,6 +77,16 @@ main_canvas.addEventListener("keydown", (e) => {
     }
 });
 
+function resize_canvas(e) {
+    let rect = main_canvas.getBoundingClientRect();
+    main_canvas.width  = rect.width * window.devicePixelRatio;
+    main_canvas.height = rect.height * window.devicePixelRatio;
+    wasm.instance.exports.resize_canvas(main_canvas.width, main_canvas.height);
+}
+
+window.addEventListener("resize", resize_canvas);
+window.addEventListener("load", resize_canvas);
+
 
 WebAssembly.instantiateStreaming(fetch('browser_snake.wasm'), {
     env: {

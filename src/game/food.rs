@@ -20,10 +20,10 @@ pub struct Food {
 }
 
 impl Food {
-    pub fn random(color: Color) -> Self {
+    pub fn random(color: Color, canvas_width: f32, canvas_height: f32) -> Self {
         let size = random_between(5.0, 30.0);
         Self {
-            position: Vector2D::new(random_between(size, CANVAS_WIDTH as f32 - size), random_between(size, CANVAS_HEIGHT as f32 - size)),
+            position: Vector2D::new(random_between(size, canvas_width - size), random_between(size, canvas_height - size)),
             size,
             original_size: size,
             color,
