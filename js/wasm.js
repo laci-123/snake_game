@@ -82,7 +82,6 @@ main_canvas.addEventListener("blur", (e) => {
 });
 
 navigator.permissions.query({ name: "accelerometer" }).then((result) => {
-    console.log("getting permission to use accelerometer");
     if (result.state === "denied") {
         console.log("Permission to use accelerometer sensor is denied.");
         return;
@@ -90,10 +89,18 @@ navigator.permissions.query({ name: "accelerometer" }).then((result) => {
 
     const acl = new Accelerometer({ frequency: 10 });
     acl.addEventListener("reading", () => {
-        console.log(`Acceleration along the X-axis ${acl.x}`);
-        console.log(`Acceleration along the Y-axis ${acl.y}`);
-        console.log(`Acceleration along the Z-axis ${acl.z}`);
-        wasm.instance.exports.input(2);
+        if (acl.x > 0) {
+            wasm.instance.exports.input(0);
+        }
+        else if (acl.x < 0) {
+            wasm.instance.exports.input(2);
+        }
+        if (acl.z > 0) {
+            wasm.instance.exports.input(1);
+        }
+        else if (acl.z < 0) {
+            wasm.instance.exports.input(3);
+        }
     });
     acl.start();
 });
