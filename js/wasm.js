@@ -56,24 +56,31 @@ function next_frame(timestamp) {
     window.requestAnimationFrame(next_frame);
 }
 
+const MOVE_RIGHT    = 0;
+const MOVE_UP       = 1;
+const MOVE_LEFT     = 2;
+const MOVE_DOWN     = 3;
+const PAUSE_UNPAUSE = 4;
+const RESTART       = 5;
+
 main_canvas.addEventListener("keydown", (e) => {
     if (e.key === "ArrowRight") {
-        wasm.instance.exports.input(0);
+        wasm.instance.exports.input(MOVE_RIGHT);
     }
     else if (e.key === "ArrowUp") {
-        wasm.instance.exports.input(1);
+        wasm.instance.exports.input(MOVE_UP);
     }
     else if (e.key === "ArrowLeft") {
-        wasm.instance.exports.input(2);
+        wasm.instance.exports.input(MOVE_LEFT);
     }
     else if (e.key === "ArrowDown") {
-        wasm.instance.exports.input(3);
+        wasm.instance.exports.input(MOVE_DOWN);
     }
     else if (e.key === " ") {
-        wasm.instance.exports.input(4);
+        wasm.instance.exports.input(PAUSE_UNPAUSE);
     }
     else if (e.key === "r") {
-        wasm.instance.exports.input(5);
+        wasm.instance.exports.input(RESTART);
     }
 });
 
@@ -87,13 +94,19 @@ navigator.permissions.query({ name: "accelerometer" }).then((result) => {
         return;
     }
 
-    const acl = new Accelerometer({ frequency: 1 });
+    const acl = new Accelerometer({ frequency: 30 });
     acl.addEventListener("reading", () => {
         if (acl.x > 1) {
-            wasm.instance.exports.input(3);
+            wasm.instance.exports.input(MOVE_RIGHT);
         }
         else if (acl.x < -1) {
-            wasm.instance.exports.input(1);
+            wasm.instance.exports.input(MOVE_LEFT);
+        }
+        if (acl.z > 1) {
+            wasm.instance.exports.input(MOVE_UP);
+        }
+        else if (acl.z < -1) {
+            wasm.instance.exports.input(MOVE_DOWN);
         }
     });
     acl.start();
