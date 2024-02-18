@@ -94,7 +94,7 @@ navigator.permissions.query({ name: "accelerometer" }).then((result) => {
         return;
     }
 
-    const acl = new Accelerometer({ frequency: 10 });
+    const acl = new Accelerometer({ frequency: 60 });
     acl.addEventListener("reading", () => {
         if (acl.x > 1) {
             wasm.instance.exports.input(MOVE_LEFT);
