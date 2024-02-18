@@ -81,19 +81,21 @@ main_canvas.addEventListener("blur", (e) => {
     setTimeout(() => main_canvas.focus(), 20);
 });
 
-const acl = new Accelerometer({ frequency: 10 });
-acl.addEventListener("reading", () => {
-  console.log(`Acceleration along the X-axis ${acl.x}`);
-  console.log(`Acceleration along the Y-axis ${acl.y}`);
-  console.log(`Acceleration along the Z-axis ${acl.z}`);
-    wasm.instance.exports.input(2);
-});
+navigator.permissions.query({ name: "accelerometer" }).then((result) => {
+    console.log("getting permission to use accelerometer");
+    if (result.state === "denied") {
+        console.log("Permission to use accelerometer sensor is denied.");
+        return;
+    }
 
-acl.start();
-
-window.addEventListener("devicemotion", (e) => {
-    console.log(e.accelerationIncludingGravity);
-    wasm.instance.exports.input(3);
+    const acl = new Accelerometer({ frequency: 10 });
+    acl.addEventListener("reading", () => {
+        console.log(`Acceleration along the X-axis ${acl.x}`);
+        console.log(`Acceleration along the Y-axis ${acl.y}`);
+        console.log(`Acceleration along the Z-axis ${acl.z}`);
+        wasm.instance.exports.input(2);
+    });
+    acl.start();
 });
 
 function resize_canvas(e) {
