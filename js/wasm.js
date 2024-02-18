@@ -90,6 +90,7 @@ navigator.permissions.query({ name: "accelerometer" }).then((result) => {
     const acl = new Accelerometer({ frequency: 10 });
     acl.addEventListener("reading", () => {
         wasm.instance.exports.acceleration(acl.x, acl.y, acl.z);
+        wasm.instance.exports.input(3);
     });
     acl.start();
 });
