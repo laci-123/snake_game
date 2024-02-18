@@ -103,7 +103,7 @@ function resize_canvas(e) {
 
 window.addEventListener("resize", resize_canvas);
 
-WebAssembly.instantiateStreaming(fetch('browser_snake.wasm'), {
+WebAssembly.instantiateStreaming(fetch('js/browser_snake.wasm'), {
     env: {
         js_fill_circle,
         js_fill_text,
