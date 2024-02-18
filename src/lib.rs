@@ -58,6 +58,10 @@ pub extern "C" fn update(dt: f32) {
     GAME.lock().unwrap().update(dt);
 }
 
+#[no_mangle]
+pub extern "C" fn acceleration(x: f32, y: f32, z: f32) {
+    fill_text(&format!("x: {x}, y: {y}, z: {z}"), 100.0, 100.0, Color::rgb(200, 200, 255), 20, TextAlignment::Center);
+}
 
 #[no_mangle]
 pub extern "C" fn resize_canvas(width: f32, height: f32) {
