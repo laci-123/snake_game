@@ -86,12 +86,14 @@ acl.addEventListener("reading", () => {
   console.log(`Acceleration along the X-axis ${acl.x}`);
   console.log(`Acceleration along the Y-axis ${acl.y}`);
   console.log(`Acceleration along the Z-axis ${acl.z}`);
+    wasm.instance.exports.input(2);
 });
 
 acl.start();
 
 window.addEventListener("devicemotion", (e) => {
     console.log(e.accelerationIncludingGravity);
+    wasm.instance.exports.input(3);
 });
 
 function resize_canvas(e) {
