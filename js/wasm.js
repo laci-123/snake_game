@@ -88,34 +88,38 @@ main_canvas.addEventListener("blur", (e) => {
     setTimeout(() => main_canvas.focus(), 20);
 });
 
-navigator.permissions.query({ name: "accelerometer" }).then((result) => {
+navigator.permissions.query({ name: "accelerometer" })
+.then((result) => {
     if (result.state === "denied") {
         console.log("Permission to use accelerometer sensor is denied.");
-        return;
     }
-
-    const acl = new Accelerometer({ frequency: 60 });
-    acl.addEventListener("reading", () => {
-        if (acl.x > 1) {
-            wasm.instance.exports.input(MOVE_LEFT);
-        }
-        else if (acl.x < -1) {
-            wasm.instance.exports.input(MOVE_RIGHT);
-        }
-        if (acl.y > 1) {
-            wasm.instance.exports.input(MOVE_DOWN);
-        }
-        else if (acl.y < -1) {
-            wasm.instance.exports.input(MOVE_UP);
-        }
-    });
-    acl.start();
+    else {
+        const acl = new Accelerometer({ frequency: 30 });
+        acl.addEventListener("reading", () => {
+            if (acl.x > 1) {
+                wasm.instance.exports.input(MOVE_LEFT);
+            }
+            else if (acl.x < -1) {
+                wasm.instance.exports.input(MOVE_RIGHT);
+            }
+            if (acl.y > 1) {
+                wasm.instance.exports.input(MOVE_DOWN);
+            }
+            else if (acl.y < -1) {
+                wasm.instance.exports.input(MOVE_UP);
+            }
+        });
+        acl.start();
+    }
+})
+.catch((error) => {
+    console.log("browser does not support accelerometer");
 });
 
 function resize_canvas(e) {
     let rect = main_canvas.getBoundingClientRect();
-    main_canvas.width  = rect.width * window.devicePixelRatio;
-    main_canvas.height = rect.height * window.devicePixelRatio;
+    main_canvas.width  = rect.width;
+    main_canvas.height = rect.height;
     wasm.instance.exports.resize_canvas(main_canvas.width, main_canvas.height);
 }
 
