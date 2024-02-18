@@ -85,7 +85,7 @@ main_canvas.addEventListener("keydown", (e) => {
 });
 
 main_canvas.addEventListener("click", (e) => {
-    wasm.instance.exports.input(PAUSE_UNPAUSE);
+    wasm.instance.exports.input(RESTART);
 });
 
 main_canvas.addEventListener("blur", (e) => {
