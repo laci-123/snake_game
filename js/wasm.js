@@ -103,10 +103,10 @@ navigator.permissions.query({ name: "accelerometer" }).then((result) => {
             wasm.instance.exports.input(MOVE_RIGHT);
         }
         if (acl.y > 1) {
-            wasm.instance.exports.input(MOVE_UP);
+            wasm.instance.exports.input(MOVE_DOWN);
         }
         else if (acl.y < -1) {
-            wasm.instance.exports.input(MOVE_DOWN);
+            wasm.instance.exports.input(MOVE_UP);
         }
     });
     acl.start();
