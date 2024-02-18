@@ -41,12 +41,12 @@ enum TextAlignment {
 
 #[derive(Clone, Copy, PartialEq)]
 enum Input {
-    ArrowRight,
-    ArrowUp,
-    ArrowLeft,
-    ArrowDown,
-    Space,
-    R,
+    MoveRight,
+    MoveUp,
+    MoveLeft,
+    MoveDown,
+    PauseUnpause,
+    Restart,
 }
 
 lazy_static! {
@@ -72,12 +72,12 @@ pub extern "C" fn render() {
 #[no_mangle]
 pub extern "C" fn input(x: i32) {
     match x {
-        0 => GAME.lock().unwrap().input(Input::ArrowRight),
-        1 => GAME.lock().unwrap().input(Input::ArrowUp),
-        2 => GAME.lock().unwrap().input(Input::ArrowLeft),
-        3 => GAME.lock().unwrap().input(Input::ArrowDown),
-        4 => GAME.lock().unwrap().input(Input::Space),
-        5 => GAME.lock().unwrap().input(Input::R),
+        0 => GAME.lock().unwrap().input(Input::MoveRight),
+        1 => GAME.lock().unwrap().input(Input::MoveUp),
+        2 => GAME.lock().unwrap().input(Input::MoveLeft),
+        3 => GAME.lock().unwrap().input(Input::MoveDown),
+        4 => GAME.lock().unwrap().input(Input::PauseUnpause),
+        5 => GAME.lock().unwrap().input(Input::Restart),
         _ => unreachable!(),
     }
 }

@@ -126,11 +126,11 @@ impl Snake {
         
         if let Some(first_cell) = self.cells.get_mut(0) {
             match input {
-                ArrowRight => first_cell.velocity.x += 10.0,
-                ArrowUp    => first_cell.velocity.y -= 10.0,
-                ArrowLeft  => first_cell.velocity.x -= 10.0,
-                ArrowDown  => first_cell.velocity.y += 10.0,
-                _          => {/* do nothing */},
+                MoveRight => first_cell.velocity.x += 10.0,
+                MoveUp    => first_cell.velocity.y -= 10.0,
+                MoveLeft  => first_cell.velocity.x -= 10.0,
+                MoveDown  => first_cell.velocity.y += 10.0,
+                _         => {},
             }
         }
     }

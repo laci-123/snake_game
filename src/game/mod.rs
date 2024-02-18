@@ -135,7 +135,7 @@ impl Game {
 
     pub fn input(&mut self, input: Input) {
         match input {
-            Input::Space => {
+            Input::PauseUnpause => {
                 if self.status == GameStatus::Playing {
                     self.status = GameStatus::Paused;
                 }
@@ -143,7 +143,7 @@ impl Game {
                     self.status = GameStatus::Playing;
                 }
             },
-            Input::R => {
+            Input::Restart => {
                 if self.status == GameStatus::Over {
                     self.reset();
                 }
