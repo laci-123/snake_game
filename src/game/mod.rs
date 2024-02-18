@@ -110,8 +110,8 @@ impl Game {
                 }
             },
             GameStatus::Paused => {
-                self.show_text("Paused", self.canvas_width / 2.0, self.canvas_height / 2.0, Color::rgb(255, 0, 0), 40, TextAlignment::Center);
-                self.show_text("press space to unpause", self.canvas_width / 2.0, self.canvas_height / 2.0 + 20.0, Color::rgb(255, 0, 0), 15, TextAlignment::Center);
+                self.show_text("Paused", self.canvas_width / 2.0, self.canvas_height / 2.0, Color::rgb(255, 0, 0), 50, TextAlignment::Center);
+                self.show_text("press space to unpause", self.canvas_width / 2.0, self.canvas_height / 2.0 + 20.0, Color::rgb(255, 0, 0), 25, TextAlignment::Center);
             },
             GameStatus::Dying => {
                 if self.collision_size < self.canvas_width {
@@ -126,8 +126,8 @@ impl Game {
                 }
             },
             GameStatus::Over => {
-                self.show_text("Game Over", self.canvas_width / 2.0, self.canvas_height / 2.0, Color::rgb(255, 0, 0), 40, TextAlignment::Center);
-                self.show_text("press R to restart", self.canvas_width / 2.0, self.canvas_height / 2.0 + 20.0, Color::rgb(255, 0, 0), 15, TextAlignment::Center);
+                self.show_text("Game Over", self.canvas_width / 2.0, self.canvas_height / 2.0, Color::rgb(255, 0, 0), 50, TextAlignment::Center);
+                self.show_text("press R to restart", self.canvas_width / 2.0, self.canvas_height / 2.0 + 20.0, Color::rgb(255, 0, 0), 25, TextAlignment::Center);
             },
         }
         self.show_text(&self.score.to_string(), 5.0, 20.0, Color::rgb(255, 255, 255), 20, TextAlignment::Left);
