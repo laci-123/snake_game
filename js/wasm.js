@@ -81,18 +81,18 @@ main_canvas.addEventListener("blur", (e) => {
     setTimeout(() => main_canvas.focus(), 20);
 });
 
-// const acl = new Accelerometer({ frequency: 10 });
-// acl.addEventListener("reading", () => {
-//   console.log(`Acceleration along the X-axis ${acl.x}`);
-//   console.log(`Acceleration along the Y-axis ${acl.y}`);
-//   console.log(`Acceleration along the Z-axis ${acl.z}`);
-// });
+const acl = new Accelerometer({ frequency: 10 });
+acl.addEventListener("reading", () => {
+  console.log(`Acceleration along the X-axis ${acl.x}`);
+  console.log(`Acceleration along the Y-axis ${acl.y}`);
+  console.log(`Acceleration along the Z-axis ${acl.z}`);
+});
 
-// acl.start();
+acl.start();
 
 window.addEventListener("devicemotion", (e) => {
     console.log(e.accelerationIncludingGravity);
-}, true);
+});
 
 function resize_canvas(e) {
     let rect = main_canvas.getBoundingClientRect();
