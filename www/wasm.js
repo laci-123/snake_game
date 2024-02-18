@@ -79,8 +79,9 @@ main_canvas.addEventListener("keydown", (e) => {
 
 function resize_canvas(e) {
     let rect = main_canvas.getBoundingClientRect();
+    const correction_factor = 0.95; // Determined experimentally. Probably needed because of some rounding error.
     main_canvas.width  = rect.width * window.devicePixelRatio;
-    main_canvas.height = rect.height * window.devicePixelRatio;
+    main_canvas.height = rect.height * window.devicePixelRatio * correction_factor;
     wasm.instance.exports.resize_canvas(main_canvas.width, main_canvas.height);
 }
 
