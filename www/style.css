@@ -1,0 +1,42 @@
+html, body {
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+    background: linear-gradient(#000070, #000020);
+    color: white;
+}
+#content {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+}
+#main-canvas {
+    background-color: #181920;
+    outline: none;
+    width: 100%;
+    height: 100%;
+}
+h1 {
+    background-color: #000070;
+    margin: 0;
+    padding-left: 0.5em;
+}
+
+@media (40em < width) {
+    #content {
+        width: 60%;
+        height: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #main-canvas {
+        flex-grow: 1;
+        border: 1px solid #aa0090;
+    }
+    h1 {
+        background-color: inherit;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        padding: 0;
+    }
+}

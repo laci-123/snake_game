@@ -77,11 +77,14 @@ main_canvas.addEventListener("keydown", (e) => {
     }
 });
 
+main_canvas.addEventListener("blur", (e) => {
+    setTimeout(() => main_canvas.focus(), 20);
+});
+
 function resize_canvas(e) {
     let rect = main_canvas.getBoundingClientRect();
-    const correction_factor = 0.95; // Determined experimentally. Probably needed because of some rounding error.
     main_canvas.width  = rect.width * window.devicePixelRatio;
-    main_canvas.height = rect.height * window.devicePixelRatio * correction_factor;
+    main_canvas.height = rect.height * window.devicePixelRatio;
     wasm.instance.exports.resize_canvas(main_canvas.width, main_canvas.height);
 }
 
@@ -96,6 +99,6 @@ WebAssembly.instantiateStreaming(fetch('browser_snake.wasm'), {
 }).then((w) => {
     wasm = w;
     window.requestAnimationFrame(next_frame);
-    main_canvas.focus();
     resize_canvas(null);
+    main_canvas.focus();
 });
