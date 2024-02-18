@@ -123,14 +123,30 @@ impl Snake {
 
     pub fn input(&mut self, input: Input) {
         use Input::*;
-        
-        if let Some(first_cell) = self.cells.get_mut(0) {
-            match input {
-                MoveRight => first_cell.velocity.x += 10.0,
-                MoveUp    => first_cell.velocity.y -= 10.0,
-                MoveLeft  => first_cell.velocity.x -= 10.0,
-                MoveDown  => first_cell.velocity.y += 10.0,
-                _         => {},
+ 
+        let first_cell = self.cells.get_mut(0).unwrap();
+        match input {
+            MoveRight => first_cell.velocity.x += 10.0,
+            MoveUp    => first_cell.velocity.y -= 10.0,
+            MoveLeft  => first_cell.velocity.x -= 10.0,
+            MoveDown  => first_cell.velocity.y += 10.0,
+            _         => {},
+        }
+
+        let mut max_distance_squared = f32::NEG_INFINITY;
+        for cells in self.cells.windows(2) {
+            let cell0 = &cells[0];
+            let cell1 = &cells[1];
+
+            let distance_squared = (cell0.position - cell1.position).length_squared();
+            if distance_squared > max_distance_squared {
+                max_distance_squared = distance_squared;
+            }
+        }
+
+        if max_distance_squared > 200.0 {
+            for cell in self.cells.iter_mut() {
+                cell.velocity *= 0.9;
             }
         }
     }
