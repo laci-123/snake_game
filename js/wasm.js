@@ -94,7 +94,7 @@ navigator.permissions.query({ name: "accelerometer" }).then((result) => {
         return;
     }
 
-    const acl = new Accelerometer({ frequency: 30 });
+    const acl = new Accelerometer({ frequency: 10 });
     acl.addEventListener("reading", () => {
         if (acl.x > 1) {
             wasm.instance.exports.input(MOVE_LEFT);
@@ -103,10 +103,10 @@ navigator.permissions.query({ name: "accelerometer" }).then((result) => {
             wasm.instance.exports.input(MOVE_RIGHT);
         }
         if (acl.z > 1) {
-            wasm.instance.exports.input(MOVE_DOWN);
+            wasm.instance.exports.input(MOVE_UP);
         }
         else if (acl.z < -1) {
-            wasm.instance.exports.input(MOVE_UP);
+            wasm.instance.exports.input(MOVE_DOWN);
         }
     });
     acl.start();
