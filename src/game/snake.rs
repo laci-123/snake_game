@@ -83,7 +83,13 @@ impl Snake {
             food.status = FoodStatus::JustEaten;
         }
 
+
         let head = self.get_head_mut();
+        let max_velocity = 400.0;
+        if head.velocity.length_squared() > max_velocity * max_velocity {
+            head.velocity = head.velocity.normalise() * max_velocity;
+        }
+
         let p = head.position + head.velocity * dt;
         let r = head.size;
         if p.x - r < 0.0 || canvas_width < p.x + r { 
@@ -101,6 +107,25 @@ impl Snake {
             let c1 = &self.cells[i + 1];
 
             let dx2 = (c0.position - c1.position).length_squared();
+
+            if dx2 > (self.cell_distance * 5.0).powi(2) {
+                // if snake losses its tail then recreate it 
+                let head      = self.get_head();
+                let position  = head.position;
+                let size      = head.size;
+                let color     = head.color;
+                let velocity  = head.velocity * 0.9;
+                let direction = head.velocity.normalise();
+                let n_cells   = self.cells.len();
+                self.cells.clear();
+                for i in 0..n_cells {
+                    let cell = SnakeCell { position: position - direction * self.cell_distance * (i as f32), size, color, velocity };
+                    self.cells.push(cell);
+                }
+                self.color_cells();
+                break;
+            }
+
             let alpha = (dx2 - self.cell_distance * self.cell_distance) * 0.75;
             let direction = (c0.position - c1.position).normalise();
 
@@ -131,23 +156,6 @@ impl Snake {
             MoveLeft  => first_cell.velocity.x -= 25.0,
             MoveDown  => first_cell.velocity.y += 25.0,
             _         => {},
-        }
-
-        let mut max_distance_squared = f32::NEG_INFINITY;
-        for cells in self.cells.windows(2) {
-            let cell0 = &cells[0];
-            let cell1 = &cells[1];
-
-            let distance_squared = (cell0.position - cell1.position).length_squared();
-            if distance_squared > max_distance_squared {
-                max_distance_squared = distance_squared;
-            }
-        }
-
-        if max_distance_squared > 200.0 {
-            for cell in self.cells.iter_mut() {
-                cell.velocity *= 0.9;
-            }
         }
     }
 
