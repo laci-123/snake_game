@@ -108,7 +108,7 @@ impl Snake {
 
             let dx2 = (c0.position - c1.position).length_squared();
 
-            if dx2 > (self.cell_distance * 5.0).powi(2) {
+            if dx2 > (self.cell_distance * 6.0).powi(2) {
                 // if snake losses its tail then recreate it 
                 let head      = self.get_head();
                 let position  = head.position;
@@ -151,10 +151,10 @@ impl Snake {
  
         let first_cell = self.get_head_mut();
         match input {
-            MoveRight => first_cell.velocity.x += 25.0,
-            MoveUp    => first_cell.velocity.y -= 25.0,
-            MoveLeft  => first_cell.velocity.x -= 25.0,
-            MoveDown  => first_cell.velocity.y += 25.0,
+            MoveRight => first_cell.velocity.x += 20.0,
+            MoveUp    => first_cell.velocity.y -= 20.0,
+            MoveLeft  => first_cell.velocity.x -= 20.0,
+            MoveDown  => first_cell.velocity.y += 20.0,
             _         => {},
         }
     }
