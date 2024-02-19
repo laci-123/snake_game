@@ -1,5 +1,5 @@
 html, body {
-    height: 100vh;
+    height: 90vh;
     padding: 0;
     margin: 0;
     background: linear-gradient(#000070, #000020);
@@ -22,7 +22,10 @@ h1 {
     padding-left: 0.5em;
 }
 
-@media (40em < width) {
+@media (60em < width) {
+    html, body {
+        height: 100vh;
+    }
     #content {
         width: 60%;
         height: 90%;
