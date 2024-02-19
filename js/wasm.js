@@ -98,7 +98,7 @@ navigator.permissions.query({ name: "accelerometer" })
         console.log("Permission to use accelerometer sensor is denied.");
     }
     else {
-        const acl = new Accelerometer({ frequency: 20 });
+        const acl = new Accelerometer({ frequency: 10 });
         acl.addEventListener("reading", () => {
             if (acl.x > 1) {
                 wasm.instance.exports.input(MOVE_LEFT);
