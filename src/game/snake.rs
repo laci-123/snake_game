@@ -74,9 +74,9 @@ impl Snake {
         let head = self.get_head();
 
         if food.status == FoodStatus::StillThere && (food.position - head.position).length() <= food.size + head.size {
-            for _ in 0..5 {
+            for i in 0..5 {
                 let tail = self.get_tail();
-                let cell = SnakeCell { position: tail.position - Vector2D::new(cell_distance, 0.0), size: tail.size, color: tail.color, velocity: tail.velocity };
+                let cell = SnakeCell { position: tail.position - Vector2D::new((i as f32) * cell_distance, 0.0), size: tail.size, color: tail.color, velocity: tail.velocity };
                 self.cells.push(cell);
             }
             self.color_cells();
@@ -101,7 +101,7 @@ impl Snake {
             let c1 = &self.cells[i + 1];
 
             let dx2 = (c0.position - c1.position).length_squared();
-            let alpha = (dx2 - self.cell_distance * self.cell_distance) * 0.5;
+            let alpha = (dx2 - self.cell_distance * self.cell_distance) * 0.75;
             let direction = (c0.position - c1.position).normalise();
 
             self.cells[i + 1].velocity = direction * alpha;
@@ -126,10 +126,10 @@ impl Snake {
  
         let first_cell = self.get_head_mut();
         match input {
-            MoveRight => first_cell.velocity.x += 30.0,
-            MoveUp    => first_cell.velocity.y -= 30.0,
-            MoveLeft  => first_cell.velocity.x -= 30.0,
-            MoveDown  => first_cell.velocity.y += 30.0,
+            MoveRight => first_cell.velocity.x += 25.0,
+            MoveUp    => first_cell.velocity.y -= 25.0,
+            MoveLeft  => first_cell.velocity.x -= 25.0,
+            MoveDown  => first_cell.velocity.y += 25.0,
             _         => {},
         }
 
