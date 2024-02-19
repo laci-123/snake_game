@@ -70,10 +70,6 @@ impl Snake {
     }
 
     pub fn update(&mut self, dt: f32, food: &mut Food, canvas_width: f32, canvas_height: f32) -> Result<(), Vector2D<f32>> {
-        if dt > 0.1 {
-            return Ok(()); 
-        }
-        
         let cell_distance = self.cell_distance;
         let head = self.get_head();
 
@@ -105,7 +101,7 @@ impl Snake {
             let c1 = &self.cells[i + 1];
 
             let dx2 = (c0.position - c1.position).length_squared();
-            let alpha = (dx2 - self.cell_distance * self.cell_distance) * 1.0;
+            let alpha = (dx2 - self.cell_distance * self.cell_distance) * 0.5;
             let direction = (c0.position - c1.position).normalise();
 
             self.cells[i + 1].velocity = direction * alpha;
@@ -130,10 +126,10 @@ impl Snake {
  
         let first_cell = self.get_head_mut();
         match input {
-            MoveRight => first_cell.velocity.x += 20.0,
-            MoveUp    => first_cell.velocity.y -= 20.0,
-            MoveLeft  => first_cell.velocity.x -= 20.0,
-            MoveDown  => first_cell.velocity.y += 20.0,
+            MoveRight => first_cell.velocity.x += 30.0,
+            MoveUp    => first_cell.velocity.y -= 30.0,
+            MoveLeft  => first_cell.velocity.x -= 30.0,
+            MoveDown  => first_cell.velocity.y += 30.0,
             _         => {},
         }
 
